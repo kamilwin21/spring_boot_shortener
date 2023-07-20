@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  shortener:
+    image: 'shortener:latest'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: shortener
+    depends_on:
+      - shortener-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://shortener-db:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+    ports:
+      - "8080:8080"
+
+  shortener-db:
+    image: 'postgres:15.2-alpine'
+    container_name: shortener-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+    command: -p 5432
